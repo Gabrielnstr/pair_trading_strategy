@@ -1,20 +1,9 @@
 import pandas as pd
 
-def compute_zscore(series: pd.Series) -> pd.Series:
-    """
-    Compute the z-score of a pandas Series.
-
-    Parameters
-    ----------
-    series : pd.Series
-        Input time series (e.g. spread between two assets)
-
-    Returns
-    -------
-    pd.Series
-        Z-score normalized series
-    """
-    mean = series.mean()
-    std = series.std()
-    zscore = (series - mean) / std
+def compute_zscore(series: pd.Series, window: int = 20) -> pd.Series:
+    rolling_mean = series.rolling(window).mean()
+    rolling_std = series.rolling(window).std(ddof=0)
+    
+    zscore = (series - rolling_mean) / rolling_std
+    
     return zscore
