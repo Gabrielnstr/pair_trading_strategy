@@ -10,45 +10,57 @@ The goal is to implement a simple statistical arbitrage strategy and evaluate it
 
 ## Methodology
 
-- Download historical prices using yfinance
-- Compute the spread using **log-prices**
-- Normalize the spread using a **rolling z-score** (to avoid look-ahead bias)
-- Define entry and exit rules based on threshold values
-- Backtest the strategy over the year 2023
+- Download historical prices using yfinance  
+- Compute the spread using **log-prices**  
+- Estimate the hedge ratio using **OLS regression**  
+- Normalize the spread using a **rolling z-score** (to avoid look-ahead bias)  
+- Define entry and exit rules based on threshold values  
+- Backtest the strategy over the year 2023  
+- Include transaction costs to simulate realistic trading conditions  
 
 ## Statistical Validation
 
 An Engle-Granger cointegration test was performed to assess the long-term relationship between the assets.
+
 The test yields a p-value of approximately 0.042, indicating statistical significance at the 5% level. However, the relationship remains relatively weak and may not persist across different time periods.
 
 ## Performance
 
-- **Sharpe Ratio:** 1.87
-- **Cumulative Return:** 29.49%
-- **Volatility:** 15.96%
-- **Max Drawdown:** -11.34%
+### Gross Performance (before costs)
 
-The strategy exhibits strong risk-adjusted performance over the selected period.
-These results suggest that the strategy captures short-term mean reversion effects, although performance may be overstated due to model simplifications.
+- **Sharpe Ratio:** 1.24  
+- **Cumulative Return:** 18.93%  
+
+### Net Performance (after transaction costs)
+
+- **Sharpe Ratio:** 0.87  
+- **Cumulative Return:** 13.03%  
+- **Volatility:** 15.10%  
+- **Max Drawdown:** -8.42%  
+
+The strategy remains profitable after including transaction costs, indicating a certain level of robustness. However, performance is significantly reduced, highlighting the impact of trading frictions.
 
 ## Results
 
 The spread shows mean-reverting behavior, generating trading opportunities when extreme deviations occur.
 
+The comparison between gross and net returns highlights the importance of accounting for transaction costs when evaluating trading strategies.
+
 ![Spread and Z-score](figures/spread_zscore.png)
 ![Cumulative Returns](figures/cumulative_returns.png)
+![Drawdown](figures/drawdown.png)
 
 ## Limitations
 
-- No transaction costs or slippage
-- Cointegration is statistically significant, but remains relatively weak and may not be stable over time
-- Simplified spread model (no hedge ratio)
-- Strategy tested on a single time period (no out-of-sample validation)
+- Transaction costs are simplified and assumed constant over time  
+- Cointegration is statistically significant but relatively weak  
+- Strategy tested on a single time period (no out-of-sample validation)  
+- Simplified model assumptions despite hedge ratio estimation  
 
 ## Possible Improvements
 
-- Estimate hedge ratio using regression
-- Perform cointegration test on multiple periods
-- Add transaction costs and slippage
-- Implement risk management
-- Perform out-of-sample and walk-forward testing
+- Perform cointegration tests over multiple periods  
+- Use dynamic (rolling) hedge ratio  
+- Add more realistic transaction cost modeling  
+- Implement risk management (position sizing, stop-loss)  
+- Perform out-of-sample and walk-forward testing  
